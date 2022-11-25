@@ -1,6 +1,7 @@
 package com.example.afinal
 
 import android.app.Application
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,23 +13,30 @@ import androidx.compose.animation.core.spring
 import androidx.compose.ui.platform.ComposeView
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,40 +60,73 @@ class TaskListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        return inflater.inflate(R.layout.fragment_list, container, false)
-            .apply { findViewById<ComposeView>(R.id.composer).setContent {
-                val owner = LocalViewModelStoreOwner.current
-                owner?.let {
-                    val viewModel: CustomViewModel = viewModel(
-                        it,
-                        "CustomViewModel",
-                        CustomViewModelFactory(
-                            LocalContext.current.applicationContext as Application
-                        )
-                    )
+//        private var _binding: FragmentTaskListBinding? = null
+//        private val binding get() = _binding!!
+//            _binding = FragmentTaskListBinding.inflate(inflater, container, false)
+//            val view = binding.root
+//            binding.composeView.apply {
+//                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner))
+//                setContent {
+//                    val owner = LocalViewModelStoreOwner.current
+//                        owner?.let {
+//                        val viewModel: CustomViewModel = viewModel(
+//                                it,
+//                                "CustomViewModel",
+//                                CustomViewModelFactory(
+//                                    LocalContext.current.applicationContext as Application
+//                                )
+//                            )
+//
+//                            TaskList(viewModel)
+//                        }
+//                    }
+//                }
+//            }
+//            return view
+//        }
 
-                    TaskList(viewModel)
-                }
-            } }
+
+    return inflater.inflate(R.layout.fragment_list, container, false)
+        .apply { findViewById<ComposeView>(R.id.composer).setContent {
+            val owner = LocalViewModelStoreOwner.current
+            owner?.let {
+                val viewModel: CustomViewModel = viewModel(
+                    it,
+                    "CustomViewModel",
+                    CustomViewModelFactory(
+                        LocalContext.current.applicationContext as Application
+                    )
+                )
+
+                TaskList(viewModel)
+            }
+        }
+        }
     }
 
 
     @Composable
     fun Routine(entity: rEntity) {
+
         var expanded by remember {
             mutableStateOf(false)
         }
+        var editing by remember {
+            mutableStateOf(false)
+        }
+
+        var color = Color(0xFFE0E0FF)
 
 
         Surface(
+            color = color,
             shadowElevation = 8.dp,
             modifier = Modifier
                 .padding(24.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .animateContentSize(
                     animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioHighBouncy
-
+                        dampingRatio = Spring.DampingRatioMediumBouncy
                     )
                 )
         ) {
@@ -95,13 +136,11 @@ class TaskListFragment : Fragment() {
                     Modifier.padding(6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = entity.rN, Modifier.weight(0.5f))
+                    if(editing){
+                        var text by remember { mutableStateOf(entity.rN) }
+                        BasicTextField(value = text, onValueChange = { text = it}, modifier = Modifier.border(1.dp, Color.Black, RoundedCornerShape(4.dp)).weight(0.5f))}
+                    else{Text(text = entity.rN, Modifier.weight(0.5f))}
 
-
-                    ButtonCheck()
-                    ButtonCheck()
-                    ButtonCheck()
-                    ButtonCheck()
                     ButtonCheck()
 
                     IconButton(onClick = { expanded = !expanded }) {
@@ -113,11 +152,69 @@ class TaskListFragment : Fragment() {
                 }
 
                 if (expanded) {
-                    Row() {
-                        Text(text = "entity.rD")
-                        Column() {
-                            Text(text = "entity.rND.toString()")
-                            Text(text = "entity.rI.toString()")
+                    Row(
+                        modifier = Modifier
+                            .padding(6.dp)
+                            .fillMaxWidth()
+                            .height(110.dp)
+                    ) {
+                        Box(modifier = Modifier
+                            .weight(0.85f)
+                            .fillMaxHeight()) {
+                            var text by remember { mutableStateOf("entity.rD") }
+
+                            if(editing){
+                                BasicTextField(value = text, onValueChange = { text = it},
+                                    modifier = Modifier.border(1.dp, Color.Black, RoundedCornerShape(4.dp)).fillMaxHeight().fillMaxWidth())
+                            }else{Text(text = "text")}
+                        }
+
+                        Box(modifier = Modifier
+                            .weight(0.15f)
+                            ) {
+                            Column() {
+                                Box(modifier = Modifier.weight(0.3f).padding(6.dp)) {
+                                    var goals by remember { mutableStateOf("rND") }
+
+                                    if (editing) {
+                                        BasicTextField(
+                                            value = goals, onValueChange = { goals = it },
+                                            modifier = Modifier.border(
+                                                1.dp,
+                                                Color.Black,
+                                                RoundedCornerShape(4.dp)
+                                            ).fillMaxWidth().fillMaxHeight()
+                                        )
+                                    } else {
+                                        Text(text = "G")
+                                    }
+                                }
+
+                                Box(modifier = Modifier.weight(0.3f).padding(6.dp)) {
+
+                                    var importance by remember { mutableStateOf("rI") }
+
+                                    if (editing) {
+                                        BasicTextField(
+                                            value = importance, onValueChange = { importance = it },
+                                            modifier = Modifier.border(
+                                                1.dp,
+                                                Color.Black,
+                                                RoundedCornerShape(4.dp)
+                                            ).fillMaxWidth().fillMaxHeight()
+                                        )
+                                    } else {
+                                        Text(text = "I")
+                                    }
+                                }
+
+                                IconButton(onClick = { editing = !editing }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Edit,
+                                        contentDescription = "edit"
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -153,6 +250,7 @@ class TaskListFragment : Fragment() {
                 when {
                     isEnabled.value -> androidx.constraintlayout.widget.R.drawable.btn_checkbox_checked_mtrl
                     else -> androidx.appcompat.R.drawable.btn_checkbox_unchecked_mtrl
+
                 }
             ), contentDescription = "gaming")
 
