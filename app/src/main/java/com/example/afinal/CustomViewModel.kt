@@ -16,6 +16,14 @@ class CustomViewModel(app: Application?) : ViewModel() {
         myRepo.add(entity)
     }
 
+    fun delete(entity: rEntity?) {
+        myRepo.delete(entity)
+    }
+
+    fun update(entity: rEntity?) {
+        myRepo.update(entity)
+    }
+
     init {
         myRepo = Repo(app)
         entityList = myRepo.show()

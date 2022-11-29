@@ -20,4 +20,10 @@ public class Repo {
 
     void add(rEntity E) { rDB.databaseWriteExecutor.execute(() ->
     { Dao.insert(E); });}
+
+    void delete(rEntity E) { rDB.databaseWriteExecutor.execute(() ->
+    { Dao.delete(E); });}
+
+    void update(rEntity E) { rDB.databaseWriteExecutor.execute(() ->
+    { Dao.update(E); });}
 }

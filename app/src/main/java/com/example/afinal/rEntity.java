@@ -20,25 +20,47 @@ public class rEntity {
 
     public rEntity(@NonNull String rN){ this.rN = rN; }
 
-//    @Ignore
-//    public rEntity(String rN, String rD, int rI, int rND){
-//        this.rD = rD;
-//        this.rN = rN;
-//        this.rI = rI;
-//        this.rND = rND;
-//    }
+    @Ignore
+    public rEntity(String rN, String rD, int rI, int G) {
+        this.rD = rD;
+        this.rN = rN;
+        this.rI = rI;
+        this.rG = G;
+    }
+    @Ignore
+    public rEntity(String rN, String rD, int rI, int rG, String rC, float rT) {
+        this.rD = rD;
+        this.rN = rN;
+        this.rI = rI;
+        this.rG = rG;
+        this.rC = rC;
+        this.rT = rT;
+    }
+
+    @Ignore
+    public rEntity(){
+        this.rD = "No Description";
+        this.rN = "No Name";
+        this.rI = 0;
+        this.rG = 0;
+    }
+
 
     @ColumnInfo(name = "rDesc")
     public String rD;
 
-    @ColumnInfo(name = "rGoal")
-    public int rND;
-
     @ColumnInfo(name = "rImportance")
     public int rI;
 
-    @ColumnInfo(name = "rTime taken")
-    public int rT;
+    @ColumnInfo(name = "rTime")
+    public float rT;
+
+    @ColumnInfo(name = "rGoal")
+    public int rG;
+
+    @ColumnInfo(name = "rCategory")
+    public String rC;
+
 
 
     //add other attributes for future

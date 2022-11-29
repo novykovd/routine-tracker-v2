@@ -10,12 +10,10 @@ import android.view.ViewGroup
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.platform.ComposeView
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
@@ -105,8 +104,9 @@ class TaskListFragment : Fragment() {
     }
 
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun Routine(entity: rEntity) {
+    fun Routine(entity: rEntity, viewModel: CustomViewModel, name: String) {
 
         var expanded by remember {
             mutableStateOf(false)
@@ -137,13 +137,31 @@ class TaskListFragment : Fragment() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if(editing){
-                        var text by remember { mutableStateOf(entity.rN) }
-                        BasicTextField(value = text, onValueChange = { text = it}, modifier = Modifier.border(1.dp, Color.Black, RoundedCornerShape(4.dp)).weight(0.5f))}
-                    else{Text(text = entity.rN, Modifier.weight(0.5f))}
+                        BasicTextField(value = name, onValueChange = {}, modifier = Modifier.border(1.dp, Color.Black, RoundedCornerShape(4.dp)).weight(0.5f))}
+                    else{Text(text = name, Modifier.weight(0.5f))}
 
                     ButtonCheck()
 
-                    IconButton(onClick = { expanded = !expanded }) {
+                    Surface(
+                        modifier = Modifier.pointerInput(Unit){
+                            detectTapGestures(
+                                onTap = {
+                                    expanded = !expanded;
+                                    if(!expanded){
+                                        editing = false;
+                                    }
+                                },
+
+                                onDoubleTap = {
+                                    if(editing){
+                                        viewModel.delete(entity)
+                                    }
+                                }
+                            )
+                        },
+                        color = Color.Transparent,
+                    )
+                    {
                         Icon(
                             imageVector = if (expanded) Icons.Filled.Close else Icons.Filled.ArrowDropDown,
                             contentDescription = "faminf"
@@ -164,9 +182,11 @@ class TaskListFragment : Fragment() {
                             var text by remember { mutableStateOf("entity.rD") }
 
                             if(editing){
-                                BasicTextField(value = text, onValueChange = { text = it},
+                                BasicTextField(value = entity.rN, onValueChange = { text = it},
                                     modifier = Modifier.border(1.dp, Color.Black, RoundedCornerShape(4.dp)).fillMaxHeight().fillMaxWidth())
-                            }else{Text(text = "text")}
+                            }else{Text(text = entity.rN)}
+
+
                         }
 
                         Box(modifier = Modifier
@@ -208,7 +228,7 @@ class TaskListFragment : Fragment() {
                                     }
                                 }
 
-                                IconButton(onClick = { editing = !editing }) {
+                                IconButton(onClick = { editing = !editing; if(!editing){ viewModel.update(entity) }}) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
                                         contentDescription = "edit"
@@ -266,15 +286,19 @@ class TaskListFragment : Fragment() {
     ){
 
 
-        val Entities by viewModel.show().observeAsState(listOf())
+            val Entities by viewModel.show().observeAsState(listOf())
 
 
-        LazyColumn(modifier = modifier.padding(vertical = 4.dp)){
-            items(items = Entities) {
-                    name -> Routine(entity = name)
+            LazyColumn(modifier = modifier.padding(vertical = 4.dp)){
+                items(items = Entities,
+                    key = { entity -> entity.id }
+                        )
+                { entity ->
+                    Routine(entity, viewModel, entity.rN)
+                }
             }
-        }
     }
+
 
 
 
