@@ -7,6 +7,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.Calendar;
+
 @Entity(tableName = "routine_DB")
 public class rEntity {
     //entity for a routine
@@ -26,6 +28,7 @@ public class rEntity {
         this.rN = rN;
         this.rI = rI;
         this.rG = G;
+
     }
     @Ignore
     public rEntity(String rN, String rD, int rI, int rG, String rC, float rT) {
@@ -60,6 +63,12 @@ public class rEntity {
 
     @ColumnInfo(name = "rCategory")
     public String rC;
+
+    @ColumnInfo(name = "rDays")
+    public String rDA = "false,false,false,false,false,false,false";
+
+    @ColumnInfo(name = "rWeek")
+    public int rW = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
 
 
 

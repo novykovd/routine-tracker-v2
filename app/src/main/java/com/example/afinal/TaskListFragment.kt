@@ -152,7 +152,9 @@ class TaskListFragment : Fragment() {
                             .weight(0.5f))}
                     else{Text(text = name, Modifier.weight(0.5f))}
 
-                    CheckboxSpace()
+                    val rDAlist = ConverterDA(entity.rDA)
+
+                    CheckboxSpace(rDAlist)
 
                     Surface(
                         modifier = Modifier.pointerInput(Unit){
@@ -200,8 +202,6 @@ class TaskListFragment : Fragment() {
                                         .fillMaxHeight()
                                         .fillMaxWidth())
                             }else{Text(text = entity.rN)}
-
-
                         }
 
                         Box(modifier = Modifier
@@ -267,6 +267,12 @@ class TaskListFragment : Fragment() {
         }
     }
 
+    private fun ConverterDA(rDA: String?): List<Boolean> {
+        //convert the string to a list of booleans
+        val list = rDA?.split(",")?.map { it.toBoolean() }?.toList()
+        return list!!
+    }
+
     @Composable
     fun ButtonCheck(
         isTrue : Boolean = false
@@ -307,7 +313,7 @@ class TaskListFragment : Fragment() {
         var calendar = Calendar.getInstance();
         var dayofWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-        LazyRow(modifier = Modifier.width(210.dp)){
+        LazyRow(modifier = Modifier.width(200.dp)){
             items(bl.size){
                 if(dayofWeek-1 == it){
                         Box(modifier = Modifier
@@ -340,8 +346,8 @@ class TaskListFragment : Fragment() {
 
     @Preview(showBackground = true)
     @Composable
-    fun CheckboxSpace(){
-        weekCheckList(bl = listOf(true, false, true, false, true, false, true))
+    fun CheckboxSpace(list : List<Boolean> = listOf(true, false, false, false, false, false, false)){
+        weekCheckList(bl = list)
     }
 
     @Composable
