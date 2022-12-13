@@ -16,8 +16,14 @@ public interface mDao {
     @Insert
     void insert(rEntity r);
 
-    @Query("SELECT * FROM routine_DB ORDER BY rName ASC")
-    LiveData<List<rEntity>> show();
+    @Query("SELECT * FROM routine_DB ORDER BY :parameter ASC")
+    LiveData<List<rEntity>> show(String parameter);
+
+    @Query("SELECT * FROM routine_DB WHERE rWeek = :week ORDER BY rName ASC")
+    LiveData<List<rEntity>> showByWeek(int week);
+
+    @Query("SELECT rWeek FROM routine_DB ORDER BY rWeek DESC LIMIT 1")
+    int whichWeek();
 
     @Delete
     void delete(rEntity r);

@@ -50,7 +50,7 @@ public class rEntity {
 
 
     @ColumnInfo(name = "rDesc")
-    public String rD;
+    public String rD = "No Description";
 
     @ColumnInfo(name = "rImportance")
     public int rI;
@@ -62,13 +62,16 @@ public class rEntity {
     public int rG;
 
     @ColumnInfo(name = "rCategory")
-    public String rC;
+    public String rC = "No Category";
 
     @ColumnInfo(name = "rDays")
     public String rDA = "false,false,false,false,false,false,false";
 
     @ColumnInfo(name = "rWeek")
     public int rW = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+
+    @ColumnInfo(name = "rAlarm")
+    public String rA = "false";
 
 
 

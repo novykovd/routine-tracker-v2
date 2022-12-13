@@ -3,11 +3,15 @@ package com.example.afinal;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.util.Calendar;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,7 +27,8 @@ public abstract class rDB extends RoomDatabase {
         if(INSTANCE == null){
             synchronized (rDB.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), rDB.class, "routine_DB").allowMainThreadQueries().addCallback(RDC).build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), rDB.class, "routine_DB")
+                            .allowMainThreadQueries().addCallback(RDC).build();
                 }
             }
         }
@@ -44,6 +49,31 @@ public abstract class rDB extends RoomDatabase {
                 Dao.insert(e2);
                 Dao.insert(e3);
             });
+
+        }
+
+        @Override
+        public void onOpen(@NonNull SupportSQLiteDatabase db) {
+            super.onOpen(db);
+
+            mDao Dao = INSTANCE.Dao();
+            int c = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+
+            int rW = 0;
+            LiveData<List<rEntity>> myStuff = Dao.show("rName");
+            try{
+                rW = Objects.requireNonNull(Dao.show("rName").getValue()).get(0).rW;
+                if ( c != rW) {
+                    //copy all rEntitys with new week
+                    Objects.requireNonNull(Dao.show("rName").getValue()).forEach(rEntity -> {
+                        rEntity r = new rEntity(rEntity.rN, rEntity.rD, rEntity.rI, rEntity.rG, rEntity.rC, rEntity.rT);
+                        Dao.insert(r);
+                    });
+                }
+            }
+            catch (Exception ignored){}
+
+
         }
     };
 }
