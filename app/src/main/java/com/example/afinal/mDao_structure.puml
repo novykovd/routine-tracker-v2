@@ -1,0 +1,285 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": false,
+    "cutInterfaceStructures": false,
+    "cutDataStructures": false,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 6,
+    "backwardDepth": 6,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": true, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "com.example.afinal.mDao",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_1322970774 { 
+   	label=example
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   subgraph cluster_819601735 { 
+   	label=afinal
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   AddBetterEntityActivity37739834[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)AddBetterEntityActivity</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   vm: NewEntityViewModel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   vm2: CustomViewModel [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" ># onCreate(savedInstanceState: Bundle)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+CustomViewModel37739834[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CustomViewModel</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   currentCategory: MutableLiveData&lt;String&gt; [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   entityList: LiveData&lt;List&lt;rEntity&gt;&gt; [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   entityList2: LiveData&lt;List&lt;rEntity&gt;&gt; [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   myRepo: Repo [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ delete(entity: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ insert(entity: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ show(): LiveData&lt;List&lt;rEntity&gt;&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ showByWeek(): LiveData&lt;List&lt;rEntity&gt;&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update(entity: rEntity)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+CustomViewModelJ37739834[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CustomViewModelJ</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   MyRepo: Repo [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   entityList: LiveData&lt;List&lt;rEntity&gt;&gt; [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ insert(entity: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" ># show(): LiveData&lt;List&lt;rEntity&gt;&gt;</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Repo37739834[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Repo</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   Dao: mDao [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   obj: LiveData&lt;List&lt;rEntity&gt;&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   obj2: LiveData&lt;List&lt;rEntity&gt;&gt; [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" ># add(E: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" ># delete(E: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" ># show(parameter: String): LiveData&lt;List&lt;rEntity&gt;&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" ># showByWeek(): LiveData&lt;List&lt;rEntity&gt;&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" ># update(E: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" ># whichWeek(): int</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+mDao37739834[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(I)mDao</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ delete(r: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ insert(r: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ show(parameter: String): LiveData&lt;List&lt;rEntity&gt;&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ showByWeek(week: int): LiveData&lt;List&lt;rEntity&gt;&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update(r: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ whichWeek(): int</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#F1E5FD"
+];
+
+mDao_Impl37739834[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)mDao_Impl</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   __db: RoomDatabase [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __deletionAdapterOfrEntity: EntityDeletionOrUpdateAdapter&lt;rEntity&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __insertionAdapterOfrEntity: EntityInsertionAdapter&lt;rEntity&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __updateAdapterOfrEntity: EntityDeletionOrUpdateAdapter&lt;rEntity&gt; [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ delete(r: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ insert(r: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ show(parameter: String): LiveData&lt;List&lt;rEntity&gt;&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ showByWeek(week: int): LiveData&lt;List&lt;rEntity&gt;&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update(r: rEntity)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ whichWeek(): int</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+rDB37739834[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)rDB</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ Dao(): mDao</TD></TR>
+<TR><TD ALIGN="LEFT" ># getDB(context: Context): rDB</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+rDB_Impl37739834[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)rDB_Impl</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   _mDao: mDao [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ Dao(): mDao</TD></TR>
+<TR><TD ALIGN="LEFT" >+ clearAllTables()</TD></TR>
+<TR><TD ALIGN="LEFT" ># createInvalidationTracker(): InvalidationTracker</TD></TR>
+<TR><TD ALIGN="LEFT" ># createOpenHelper(configuration: DatabaseConfiguration): SupportSQLiteOpenHelper</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getAutoMigrations(autoMigrationSpecsMap: Map&lt;Class&lt;? extends AutoMigrationSpec&gt;, AutoMigrationSpec&gt;): List&lt;Migration&gt;</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+rEntity37739834[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)rEntity</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   id: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rA: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rC: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rD: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rDA: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rG: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rI: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rN: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rT: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   rW: int [1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+} 
+
+'edges    
+AddBetterEntityActivity37739834 -> CustomViewModel37739834[label="vm2
+[0..1]"];
+CustomViewModel37739834 -> Repo37739834[label="myRepo
+[1]"];
+CustomViewModelJ37739834 -> Repo37739834[label="MyRepo
+[0..1]"];
+Repo37739834 -> mDao37739834[label="Dao
+[0..1]"];
+mDao37739834 -> mDao_Impl37739834[arrowhead=none, arrowtail=empty, dir=both];
+mDao_Impl37739834 -> rEntity37739834[label="__deletionAdapterOfrEntity
+[0..1]"];
+mDao_Impl37739834 -> rEntity37739834[label="__insertionAdapterOfrEntity
+[0..1]"];
+mDao_Impl37739834 -> rEntity37739834[label="__updateAdapterOfrEntity
+[0..1]"];
+rDB37739834 -> rDB_Impl37739834[arrowhead=none, arrowtail=empty, dir=both];
+rDB_Impl37739834 -> mDao37739834[label="_mDao
+[0..1]"];
+    
+}
+@enduml
