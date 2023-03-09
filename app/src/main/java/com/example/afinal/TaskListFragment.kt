@@ -120,22 +120,8 @@ class TaskListFragment : Fragment() {
             mutableStateOf(false)
         }
 
-        var name by remember {
-            mutableStateOf(entity.rN)
-        }
-
-        var description by remember {
-            mutableStateOf(entity.rD)
-        }
-
-        var goal by remember {
-            mutableStateOf(entity.rG)
-        }
-
-        var importance by remember {
-            mutableStateOf(entity.rI)
-        }
-
+        //variable for the week of year
+        var week = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)
 
 
 
@@ -161,10 +147,10 @@ class TaskListFragment : Fragment() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if(editing){
-                        BasicTextField(value = name, onValueChange = {name = it}, modifier = Modifier
+                        BasicTextField(value = name, onValueChange = {}, modifier = Modifier
                             .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
                             .weight(0.5f))}
-                    else{Text(text = entity.rN, Modifier.weight(0.5f))}
+                    else{Text(text = name, Modifier.weight(0.5f))}
 
                     val rDAlist = ConverterDA(entity.rDA)
 
@@ -207,14 +193,15 @@ class TaskListFragment : Fragment() {
                         Box(modifier = Modifier
                             .weight(0.85f)
                             .fillMaxHeight()) {
+                            var text by remember { mutableStateOf("entity.rD") }
 
                             if(editing){
-                                BasicTextField(value = description, onValueChange = { description = it},
+                                BasicTextField(value = entity.rN, onValueChange = { text = it},
                                     modifier = Modifier
                                         .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
                                         .fillMaxHeight()
                                         .fillMaxWidth())
-                            }else{Text(text = entity.rD)}
+                            }else{Text(text = entity.rN)}
                         }
 
                         Box(modifier = Modifier
@@ -224,31 +211,49 @@ class TaskListFragment : Fragment() {
                                 Box(modifier = Modifier
                                     .weight(0.3f)
                                     .padding(6.dp)) {
+                                    var goals by remember { mutableStateOf("rND") }
 
-                                    Text(text = entity.rG.toString(), textAlign = TextAlign.Center)
-
+                                    if (editing) {
+                                        BasicTextField(
+                                            value = goals, onValueChange = { goals = it },
+                                            modifier = Modifier
+                                                .border(
+                                                    1.dp,
+                                                    Color.Black,
+                                                    RoundedCornerShape(4.dp)
+                                                )
+                                                .fillMaxWidth()
+                                                .fillMaxHeight()
+                                        )
+                                    } else {
+                                        Text(text = "G")
+                                    }
                                 }
 
                                 Box(modifier = Modifier
                                     .weight(0.3f)
                                     .padding(6.dp)) {
 
-                                    Text(text = entity.rI.toString(), textAlign = TextAlign.Center)
+                                    var importance by remember { mutableStateOf("rI") }
+
+                                    if (editing) {
+                                        BasicTextField(
+                                            value = importance, onValueChange = { importance = it },
+                                            modifier = Modifier
+                                                .border(
+                                                    1.dp,
+                                                    Color.Black,
+                                                    RoundedCornerShape(4.dp)
+                                                )
+                                                .fillMaxWidth()
+                                                .fillMaxHeight()
+                                        )
+                                    } else {
+                                        Text(text = week.toString())
+                                    }
                                 }
 
-                                IconButton(onClick = { editing = !editing;
-                                    if(!editing){
-                                        entity.rN = name
-                                        entity.rD = description
-                                        entity.rG = goal
-                                        entity.rI = importance
-                                        viewModel.update(entity) };
-//                                    if(editing){
-//                                        entity.rN = name
-//                                        entity.rD = description
-//                                        viewModel.update(entity)
-//                                }
-                                }) {
+                                IconButton(onClick = { editing = !editing; if(!editing){ viewModel.update(entity) }}) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
                                         contentDescription = "edit"
@@ -270,11 +275,11 @@ class TaskListFragment : Fragment() {
 
     @Composable
     fun ButtonCheck(
-        isTrue : Boolean = false,
-        onCheckedChange: () -> Unit
-
+        isTrue : Boolean = false
     ){
-        val checkedState by remember { mutableStateOf(isTrue) }
+        var isEnabled by remember {
+            mutableStateOf(isTrue)
+        }
 
         Row(
             modifier = Modifier.padding(6.dp)
@@ -285,14 +290,14 @@ class TaskListFragment : Fragment() {
             Image(modifier = Modifier.pointerInput(Unit){
                 detectTapGestures(
                     onTap = {
-                        onCheckedChange()
+                        isEnabled = !isEnabled
                     }
                 )
             }
 
             , painter = painterResource(
                 when {
-                    checkedState -> androidx.constraintlayout.widget.R.drawable.btn_checkbox_checked_mtrl
+                    isEnabled -> androidx.constraintlayout.widget.R.drawable.btn_checkbox_checked_mtrl
                     else -> androidx.appcompat.R.drawable.btn_checkbox_unchecked_mtrl
 
                 }
@@ -304,40 +309,33 @@ class TaskListFragment : Fragment() {
     @Composable
     fun weekCheckList(bl : List<Boolean>){
 
-        val list2 : LinkedList<Boolean> = LinkedList(bl)
         val list = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
-
         var calendar = Calendar.getInstance();
         var dayofWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-        LazyRow(modifier = Modifier.width(200.dp).border(1.dp, Color.Black, RoundedCornerShape(8.dp))) {
-            items(list2.size){
+        LazyRow(modifier = Modifier.width(200.dp)){
+            items(bl.size){
                 if(dayofWeek-1 == it){
                         Box(modifier = Modifier
-                            .padding(2.dp)
-                            .border(3.dp, Color.Blue, RoundedCornerShape(8.dp))
-                            .width(40.dp)
-                            .padding(4.dp)
-                            .height(60.dp),
-                            contentAlignment = Alignment.Center){
+                            .border(3.dp, Color.Blue, RoundedCornerShape(8.dp)).width(40.dp), contentAlignment = Alignment.Center){
                             Column() {
-                            Text(text = list[it], textAlign = TextAlign.Center, modifier = Modifier.fillParentMaxWidth(0.2F))
-                            ButtonCheck(list2[it], onCheckedChange = {list2[it] = !list2[it]})
+                            Text(text = list[it], textAlign = TextAlign.Center, modifier = Modifier.fillParentMaxWidth(
+                                0.2F
+                            ))
+                            ButtonCheck(bl[it])
                             }
                         }
 
                 }
                 else{
-                        Box(modifier = Modifier
-                            .padding(2.dp)
-                            .border(3.dp, Color.Transparent, RoundedCornerShape(8.dp))
-                            .width(40.dp)
-                            .padding(4.dp)
-                            .height(60.dp),
-                            contentAlignment = Alignment.Center){
+                        Box(modifier = Modifier) {
                             Column() {
-                                Text(text = list[it], textAlign = TextAlign.Center, modifier = Modifier.fillParentMaxWidth(0.2F))
-                                ButtonCheck(list2[it],{} )
+                                Text(
+                                    text = list[it],
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.fillParentMaxWidth(0.2F)
+                                )
+                                ButtonCheck(bl[it])
                             }
                         }
                 }
@@ -358,7 +356,7 @@ class TaskListFragment : Fragment() {
         modifier: Modifier = Modifier,
     ){
 
-            val Entities by viewModel.showByWeek().observeAsState(listOf())
+            val Entities by viewModel.show().observeAsState(listOf())
 
             LazyColumn(modifier = modifier.padding(vertical = 4.dp)){
                 items(items = Entities,
@@ -373,4 +371,11 @@ class TaskListFragment : Fragment() {
 
 
 
+
+}
+
+class CustomViewModelFactory(val application : Application) : ViewModelProvider.Factory{
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return CustomViewModel(application) as T
+    }
 }

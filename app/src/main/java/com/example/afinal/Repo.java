@@ -4,31 +4,19 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Calendar;
 import java.util.List;
 
 public class Repo {
     private mDao Dao;
     private LiveData<List<rEntity>> obj;
-    private LiveData<List<rEntity>> obj2;
 
     Repo(Context context){
-        int w = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
         rDB db = rDB.getDB(context);
         Dao = db.Dao();
-
-        obj2 = Dao.showByWeek(w);
+        obj = Dao.show();
     }
 
-
-    LiveData<List<rEntity>> show(String parameter) {
-        obj = Dao.show(parameter);
-        return obj;
-    }
-
-    LiveData<List<rEntity>> showByWeek() { return obj2; }
+    LiveData<List<rEntity>> show() { return obj; }
 
     void add(rEntity E) { rDB.databaseWriteExecutor.execute(() ->
     { Dao.insert(E); });}
@@ -38,6 +26,4 @@ public class Repo {
 
     void update(rEntity E) { rDB.databaseWriteExecutor.execute(() ->
     { Dao.update(E); });}
-
-    int whichWeek() { return Dao.whichWeek(); }
 }
